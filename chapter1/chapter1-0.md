@@ -9,6 +9,7 @@ Node已经如今发展很快，已经相对稳定和成熟，在某些时候有�
 ![image](images/chapter1-0.png)
 
 Node.js主要分为四大部分，Node Standard Library，Node Bindings，V8，Libuv
+
 解压包后代码结构如下：
 ```
 ├── AUTHORS
