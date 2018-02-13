@@ -99,6 +99,14 @@ int main(int argc, char *argv[]) {
 ```
 
 ### 1.1 node::Start 加载js
+调用顺序：
+
+Start() -> LoadEnviroment() -> ExecuteString()
+
+最终在LoadEnvrioment()里面加载node.js文件，调用ExecuteString()。
+
+并且在ExecuteString()调用V8的 Script::Compile() 和 Script::Run()两个接口去解析执行js代码。
+
 node.cc
 ```
 # Nodejs启动入口， 
