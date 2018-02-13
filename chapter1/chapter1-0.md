@@ -58,7 +58,7 @@ server.listen(port, hostname, () => {
 整体运行流程图
 ![image](images/node-loop.png)
 
-一个简单的Helloworld涉及到多个模块
+一个简单的Helloworld涉及到多个模块：
 - global 
 - module
 - http
