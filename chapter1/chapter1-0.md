@@ -1,4 +1,4 @@
-### NodeJS源码详解-1 Hello world
+### NodeJS源码分析-1 Hello world
 by Fzxa 2018-02-13
 #### 简要
 Node已经如今发展很快，已经相对稳定和成熟，在某些时候有必要知道其内部运行原理以及运行处理过程。
