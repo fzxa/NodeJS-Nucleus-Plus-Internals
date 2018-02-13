@@ -92,7 +92,8 @@ int main(int argc, char *argv[]) {
   // calls elsewhere in the program (e.g., any logging from V8.)
   setvbuf(stdout, nullptr, _IONBF, 0); 
   setvbuf(stderr, nullptr, _IONBF, 0); 
-  return node::Start(argc, argv);
+  // main作为入口调用node::Start
+  return node::Start(argc, argv);
 }
 #endif
 ```
@@ -126,13 +127,15 @@ inline int Start(Isolate* isolate, IsolateData* isolate_data,
   {
     Environment::AsyncCallbackScope callback_scope(&env);
     env.async_hooks()->push_async_ids(1, 0);
-    LoadEnvironment(&env);
-    env.async_hooks()->pop_async_id(1);
+    
+    //加载nodejs文件后调用ExecuteString()
+    LoadEnvironment(&env); 
+    env.async_hooks()->pop_async_id(1);
   }
 
   env.set_trace_sync_io(trace_sync_io);
-
-  {
+  //事件循环池
+  {
     SealHandleScope seal(isolate);
     bool more;
     PERFORMANCE_MARK(&env, LOOP_START);
@@ -168,4 +171,5 @@ inline int Start(Isolate* isolate, IsolateData* isolate_data,
 
   return exit_code;
 }
+
 ```
