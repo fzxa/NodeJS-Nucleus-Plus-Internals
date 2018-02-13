@@ -101,6 +101,7 @@ int main(int argc, char *argv[]) {
 ### 1.1 node::Start 加载js
 node.cc
 ```
+# Nodejs启动入口， 
 inline int Start(Isolate* isolate, IsolateData* isolate_data,
                  int argc, const char* const* argv,
                  int exec_argc, const char* const* exec_argv) {
