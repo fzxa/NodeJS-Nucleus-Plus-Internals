@@ -26,7 +26,7 @@ Node已经如今发展很快，已经相对稳定和成熟，在某些时候有�
 ├── benchmark
 ├── common.gypi
 ├── configure
-├── deps          # Node底层核心依赖； 最核心的两块V8引擎和libuv事件驱动的异步I/O模型库
+├── deps          # Node底层核心依赖； 最核心的两块V8 Engine和libuv事件驱动的异步I/O模型库
 ├── doc           
 ├── lib           # Node后端核心库
 ├── node.gyp      # Node编译任务配置文件 
