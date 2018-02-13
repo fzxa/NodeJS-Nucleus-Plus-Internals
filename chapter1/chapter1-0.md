@@ -32,7 +32,26 @@ Node已经如今发展很快，已经相对稳定和成熟，在某些时候有�
 ├── node.gyp      # Node编译任务配置文件 
 ├── node.gypi
 ├── src           # C++内建模块
-├── test
-├── tools
+├── test          # 测试代码
+├── tools         # 编译时用到的工具
 └── vcbuild.bat   # Windows跨平台makefile文件
+```
+
+### Hello World 底层运行过程
+[官方Hello world代码](https://nodejs.org/en/about/)
+```
+const http = require('http');
+
+const hostname = '127.0.0.1';
+const port = 3000;
+
+const server = http.createServer((req, res) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/plain');
+  res.end('Hello World\n');
+});
+
+server.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);
+});
 ```
