@@ -11,7 +11,7 @@ Node已经如今发展很快，已经相对稳定和成熟，在某些时候有�
 解压包后代码结构如下：
 ```
 ├── AUTHORS
-├── BSDmakefile
+├── BSDmakefile   # bsd平台makefile文件
 ├── BUILDING.md
 ├── CHANGELOG.md
 ├── CODE_OF_CONDUCT.md
@@ -20,19 +20,19 @@ Node已经如今发展很快，已经相对稳定和成熟，在某些时候有�
 ├── CPP_STYLE_GUIDE.md
 ├── GOVERNANCE.md
 ├── LICENSE
-├── Makefile
+├── Makefile    # Linux平台makefile文件
 ├── README.md
 ├── android-configure
 ├── benchmark
 ├── common.gypi
 ├── configure
-├── deps
-├── doc
-├── lib
-├── node.gyp
+├── deps          # Node底层核心依赖； 如V8引擎和libuv跨平台
+├── doc           
+├── lib           # Node后端核心库
+├── node.gyp      # Node编译任务配置文件 
 ├── node.gypi
-├── src
+├── src           # C++内建模块
 ├── test
 ├── tools
-└── vcbuild.bat
+└── vcbuild.bat   # Windows跨平台makefile文件
 ```
