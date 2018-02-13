@@ -4,4 +4,4 @@ Node已经如今发展很快，已经相对稳定和成熟，在某些时候有�
 种树最好的时机是10年前，其次是现在。希望能坚持下去。
 
 ### Nodejs当前最新版本 8.9.4
-(NodeJS-Nucleus-Plus-Internals/chapter1/chapter1-0.png)
+![image](NodeJS-Nucleus-Plus-Internals/chapter1/chapter1-0.png)
