@@ -55,7 +55,7 @@ server.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
 ```
-流程图
+运行流程图
 ![image](images/node-loop.png)
 
 一个简单的Helloworld涉及到多个模块
