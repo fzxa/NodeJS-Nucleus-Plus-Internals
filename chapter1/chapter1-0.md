@@ -67,3 +67,31 @@ server.listen(port, hostname, () => {
 - http
 - event
 - net 
+
+### 从main执行到js
+入口 src/node_main.cc 106行 通过 src/node.cc 调用 node::Start(argc,argv) 
+```
+namespace node {
+  extern bool linux_at_secure;
+}  // namespace node
+
+int main(int argc, char *argv[]) {
+#if defined(__linux__)
+  char** envp = environ;
+  while (*envp++ != nullptr) {}
+  Elf_auxv_t* auxv = reinterpret_cast<Elf_auxv_t*>(envp);
+  for (; auxv->a_type != AT_NULL; auxv++) {
+    if (auxv->a_type == AT_SECURE) {
+      node::linux_at_secure = auxv->a_un.a_val;
+      break;
+    }   
+  }
+#endif
+  // Disable stdio buffering, it interacts poorly with printf()
+  // calls elsewhere in the program (e.g., any logging from V8.)
+  setvbuf(stdout, nullptr, _IONBF, 0); 
+  setvbuf(stderr, nullptr, _IONBF, 0); 
+  return node::Start(argc, argv);
+}
+#endif
+```
