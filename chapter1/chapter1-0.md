@@ -68,8 +68,9 @@ server.listen(port, hostname, () => {
 - event
 - net 
 
-### 从main执行到js
+### 1.0 从main执行到js
 入口 src/node_main.cc 106行 通过 src/node.cc 调用 node::Start(argc, argv);
+node_main.cc
 ```
 namespace node {
   extern bool linux_at_secure;
@@ -94,4 +95,77 @@ int main(int argc, char *argv[]) {
   return node::Start(argc, argv);
 }
 #endif
+```
+
+### 1.1 node::Start 加载js
+node.cc
+```
+inline int Start(Isolate* isolate, IsolateData* isolate_data,
+                 int argc, const char* const* argv,
+                 int exec_argc, const char* const* exec_argv) {
+  HandleScope handle_scope(isolate);
+  Local<Context> context = Context::New(isolate);
+  Context::Scope context_scope(context);
+  Environment env(isolate_data, context);
+  CHECK_EQ(0, uv_key_create(&thread_local_env));
+  uv_key_set(&thread_local_env, &env);
+  env.Start(argc, argv, exec_argc, exec_argv, v8_is_profiling);
+
+  const char* path = argc > 1 ? argv[1] : nullptr;
+  StartInspector(&env, path, debug_options);
+
+  if (debug_options.inspector_enabled() && !v8_platform.InspectorStarted(&env))
+    return 12;  // Signal internal error.
+
+  env.set_abort_on_uncaught_exception(abort_on_uncaught_exception);
+
+  if (force_async_hooks_checks) {
+    env.async_hooks()->force_checks();
+  }
+
+  {
+    Environment::AsyncCallbackScope callback_scope(&env);
+    env.async_hooks()->push_async_ids(1, 0);
+    LoadEnvironment(&env);
+    env.async_hooks()->pop_async_id(1);
+  }
+
+  env.set_trace_sync_io(trace_sync_io);
+
+  {
+    SealHandleScope seal(isolate);
+    bool more;
+    PERFORMANCE_MARK(&env, LOOP_START);
+    do {
+      uv_run(env.event_loop(), UV_RUN_DEFAULT);
+
+      v8_platform.DrainVMTasks();
+
+      more = uv_loop_alive(env.event_loop());
+      if (more)
+        continue;
+
+      EmitBeforeExit(&env);
+
+      // Emit `beforeExit` if the loop became alive either after emitting
+      // event, or after running some callbacks.
+      more = uv_loop_alive(env.event_loop());
+    } while (more == true);
+    PERFORMANCE_MARK(&env, LOOP_EXIT);
+  }
+
+  env.set_trace_sync_io(false);
+
+  const int exit_code = EmitExit(&env);
+  RunAtExit(&env);
+  uv_key_delete(&thread_local_env);
+
+  v8_platform.DrainVMTasks();
+  WaitForInspectorDisconnect(&env);
+#if defined(LEAK_SANITIZER)
+  __lsan_do_leak_check();
+#endif
+
+  return exit_code;
+}
 ```
