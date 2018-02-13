@@ -20,7 +20,7 @@ Node已经如今发展很快，已经相对稳定和成熟，在某些时候有�
 ├── CPP_STYLE_GUIDE.md
 ├── GOVERNANCE.md
 ├── LICENSE
-├── Makefile    # Linux平台makefile文件
+├── Makefile     # Linux平台makefile文件
 ├── README.md
 ├── android-configure
 ├── benchmark
