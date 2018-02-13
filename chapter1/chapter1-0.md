@@ -55,6 +55,8 @@ server.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
 ```
+流程图
+![image](images/node-loop.png)
 这段代码主要涉及到的模块
 - global 
 - module
