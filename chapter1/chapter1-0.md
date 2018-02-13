@@ -69,7 +69,7 @@ server.listen(port, hostname, () => {
 - net 
 
 ### 从main执行到js
-入口 src/node_main.cc 106行 通过 src/node.cc 调用 node::Start(argc,argv) 
+入口 src/node_main.cc 106行 通过 src/node.cc 调用 node::Start(argc, argv);
 ```
 namespace node {
   extern bool linux_at_secure;
