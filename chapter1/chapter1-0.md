@@ -10,7 +10,7 @@ Node已经如今发展很快，已经相对稳定和成熟，在某些时候有�
 
 Node.js主要分为四大部分，Node Standard Library，Node Bindings，V8，Libuv
 
-大致流程是这样的,后面会详细讲解：
+大体流程是这样的：
 
 1. 初始化 V8 、LibUV , OpenSSL
 
