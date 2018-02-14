@@ -10,6 +10,18 @@ Node已经如今发展很快，已经相对稳定和成熟，在某些时候有�
 
 Node.js主要分为四大部分，Node Standard Library，Node Bindings，V8，Libuv
 
+大致流程是这样的,后面会详细讲解：
+
+1. 初始化 V8 、LibUV , OpenSSL
+
+2. 创建 Environment 环境
+
+3. 设置 Process 进程对象
+
+4. 执行 node.js 文件
+
+
+
 解压包后代码结构如下：
 ```
 ├── AUTHORS
@@ -103,9 +115,11 @@ int main(int argc, char *argv[]) {
 
 Start() -> LoadEnviroment() -> ExecuteString()
 
-最终在LoadEnvrioment()里面加载node.js文件，调用ExecuteString()。
+最终在LoadEnvrioment()里面加载node.js文件，调用ExecuteString() 解析执行node.js文件，返回值是一个f_value
 
 并且在ExecuteString()调用V8的 Script::Compile() 和 Script::Run()两个接口去解析执行js代码。
+
+
 
 node.cc
 ```
@@ -182,4 +196,6 @@ inline int Start(Isolate* isolate, IsolateData* isolate_data,
 }
 
 ```
-### 1.2 Node require/module.exports  模块分析
+
+### 底层运行流程
+核心数
