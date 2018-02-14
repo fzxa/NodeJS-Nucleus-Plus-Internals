@@ -197,5 +197,6 @@ inline int Start(Isolate* isolate, IsolateData* isolate_data,
 
 ```
 
-### 底层运行流程
-核心数
+### 核心运行流程
+1. 核心数据结构 default_loop_struct 结构体为struct uv_loop_s
+当加载js文件时，如果代码有io操作，
