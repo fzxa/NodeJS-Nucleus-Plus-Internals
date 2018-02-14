@@ -317,3 +317,77 @@ Module._load = function(request, parent, isMain) {
   return module.exports;
 };
 ```
+在Module._load方法的内部调用了Module._findPath这个方法，这个方法是用来返回模块的绝对路径的，源码如下：
+```
+Module._findPath = function(request, paths) {
+
+  // 列出所有可能的后缀名：.js，.json, .node
+  var exts = Object.keys(Module._extensions);
+
+  // 如果是绝对路径，就不再搜索
+  if (request.charAt(0) === '/') {
+    paths = [''];
+  }
+
+  // 是否有后缀的目录斜杠
+  var trailingSlash = (request.slice(-1) === '/');
+
+  // 第一步：如果当前路径已在缓存中，就直接返回缓存
+  var cacheKey = JSON.stringify({request: request, paths: paths});
+  if (Module._pathCache[cacheKey]) {
+    return Module._pathCache[cacheKey];
+  }
+
+  // 第二步：依次遍历所有路径
+  for (var i = 0, PL = paths.length; i < PL; i++) {
+    var basePath = path.resolve(paths[i], request);
+    var filename;
+
+    if (!trailingSlash) {
+      // 第三步：是否存在该模块文件
+      filename = tryFile(basePath);
+
+      if (!filename && !trailingSlash) {
+        // 第四步：该模块文件加上后缀名，是否存在
+        filename = tryExtensions(basePath, exts);
+      }
+    }
+
+    // 第五步：目录中是否存在 package.json 
+    if (!filename) {
+      filename = tryPackage(basePath, exts);
+    }
+
+    if (!filename) {
+      // 第六步：是否存在目录名 + index + 后缀名 
+      filename = tryExtensions(path.resolve(basePath, 'index'), exts);
+    }
+
+    // 第七步：将找到的文件路径存入返回缓存，然后返回
+    if (filename) {
+      Module._pathCache[cacheKey] = filename;
+      return filename;
+    }
+ }
+
+  // 第八步：没有找到文件，返回false 
+  return false;
+};
+
+当我们第一次引入一个模块的时候，require的缓存机制会将我们引入的模块加入到内存中，以提升二次加载的性能。但是，如果我们修改了被引入模块的代码之后，当再次引入该模块的时候，就会发现那并不是我们最新的代码，这是一个麻烦的事情。如何解决呢
+require有如下方法：
+require(): 加载外部模块
+require.resolve()：将模块名解析到一个绝对路径
+require.main：指向主模块
+require.cache：指向所有缓存的模块
+require.extensions：根据文件的后缀名，调用不同的执行函数
+
+```
+//删除指定模块的缓存
+delete require.cache[require.resolve('/*被缓存的模块名称*/')]
+
+// 删除所有模块的缓存
+Object.keys(require.cache).forEach(function(key) {
+     delete require.cache[key];
+})
+```
