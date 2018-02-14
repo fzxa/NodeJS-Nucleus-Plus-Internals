@@ -373,7 +373,7 @@ Module._findPath = function(request, paths) {
   // 第八步：没有找到文件，返回false 
   return false;
 };
-
+```
 当我们第一次引入一个模块的时候，require的缓存机制会将我们引入的模块加入到内存中，以提升二次加载的性能。但是，如果我们修改了被引入模块的代码之后，当再次引入该模块的时候，就会发现那并不是我们最新的代码，这是一个麻烦的事情。如何解决呢
 require有如下方法：
 require(): 加载外部模块
@@ -381,6 +381,7 @@ require.resolve()：将模块名解析到一个绝对路径
 require.main：指向主模块
 require.cache：指向所有缓存的模块
 require.extensions：根据文件的后缀名，调用不同的执行函数
+
 
 ```
 //删除指定模块的缓存
