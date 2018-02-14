@@ -70,8 +70,6 @@ server.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
 ```
-整体运行流程图
-![image](images/node-loop.png)
 
 一个简单的Helloworld涉及到多个模块：
 - global 
@@ -198,6 +196,9 @@ inline int Start(Isolate* isolate, IsolateData* isolate_data,
 ```
 
 ### 核心运行流程
+整体运行流程图
+![image](images/node-loop.png)
+
 1. 核心数据结构 default_loop_struct 结构体为struct uv_loop_s
 当加载js文件时，如果代码有io操作，调用lib模块->底层C++模块->LibUV(deps uv)->拿到系统返回的一个fd（文件描述符），和 js代码传进来的回调函数callback，封装成一个io观察者（一个uv__io_s类型的对象），保存到default_loop_struct.
 
