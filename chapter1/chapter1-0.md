@@ -227,3 +227,19 @@ module.exports = {
 }
 console.log(module)
 ```
+执行node module.js 返回如下
+```
+Module {
+  id: '.',
+  exports: { name: 'fzxa', getAge: [Function: getAge] },
+  parent: null,
+  filename: '/Users/fzxa/Documents/study/module.js',
+  loaded: false,
+  children: [],
+  paths: 
+   [ '/Users/fzxa/Documents/study/node_modules',
+     '/Users/fzxa/Documents/node_modules',
+     '/Users/fzxa/node_modules',
+     '/Users/node_modules',
+     '/node_modules' ] }
+```
