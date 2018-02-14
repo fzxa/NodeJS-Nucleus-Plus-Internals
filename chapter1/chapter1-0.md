@@ -199,4 +199,9 @@ inline int Start(Isolate* isolate, IsolateData* isolate_data,
 
 ### 核心运行流程
 1. 核心数据结构 default_loop_struct 结构体为struct uv_loop_s
-当加载js文件时，如果代码有io操作，
+当加载js文件时，如果代码有io操作，调用lib模块->底层C++模块->LibUV(deps uv)->拿到系统返回的一个fd（文件描述符），和 js代码传进来的回调函数callback，封装成一个io观察者（一个uv__io_s类型的对象），保存到default_loop_struct.
+
+2. 进入事件池， default_loop_struct保存对应io观察着，V8 Engine处理js代码, main函数调用libuv进入uv_run(), node进入事件循环 ,判断是否有存活的观察者
+- 如果也没有io, Node进程退出
+- 如果有io观察者， 执行uv_run()进入epoll_wait()线程挂起，io观察者检测是否有数据返回callback, 没有数据则会一直在epoll_wait()等待执行 （server.listen(3000)会挂起一直等待）
+
