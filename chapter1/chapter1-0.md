@@ -206,3 +206,24 @@ inline int Start(Isolate* isolate, IsolateData* isolate_data,
 - 如果也没有io, Node进程退出
 - 如果有io观察者， 执行uv_run()进入epoll_wait()线程挂起，io观察者检测是否有数据返回callback, 没有数据则会一直在epoll_wait()等待执行 server.listen(3000)会挂起一直等待。
 
+###  Module对象原理
+根据CommonJS规范，每一个文件就是一个模块，在每个模块中，都会有一个module对象，这个对象就指向当前的模块。
+module对象具有以下属性：
+- id：当前模块的bi
+- exports：表示当前模块暴露给外部的值
+- parent： 是一个对象，表示调用当前模块的模块
+- children：是一个对象，表示当前模块调用的模块
+- filename：模块的绝对路径
+- paths：从当前文件目录开始查找node_modules目录；然后依次进入父目录，查找父目录下的node_modules目录；依次迭代，直到根目录下的node_modules目录
+- loaded：一个布尔值，表示当前模块是否已经被完全加载
+
+示例：
+```
+module.exports = { 
+    name: 'fzxa',
+    getAge: function(age){
+            console.log(age)
+    }   
+}
+console.log(module)
+```
