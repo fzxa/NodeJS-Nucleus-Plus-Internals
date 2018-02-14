@@ -392,3 +392,11 @@ Object.keys(require.cache).forEach(function(key) {
      delete require.cache[key];
 })
 ```
+
+
+参考链接：
+```
+https://yjhjstz.gitbooks.io/deep-into-node/chapter1/
+http://blog.csdn.net/wuji3390/article/details/71276849
+https://feclub.cn/post/content/wq_node
+```
