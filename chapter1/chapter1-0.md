@@ -394,6 +394,120 @@ Object.keys(require.cache).forEach(function(key) {
 ```
 
 
+### HTTP_Server 
+首先需要创建一个 http.Server 类的实例，然后监听它的 request 事件
+
+requestListener 回调函数作为观察者，监听了 request 事件， 默认超时时间为2分
+
+lib/_http_server.js
+```
+function Server(requestListener) {
+  if (!(this instanceof Server)) return new Server(requestListener);
+  net.Server.call(this, { allowHalfOpen: true }); 
+
+  if (requestListener) {
+    this.on('request', requestListener);
+  }
+
+  // Similar option to this. Too lazy to write my own docs.
+  // http://www.squid-cache.org/Doc/config/half_closed_clients/
+  // http://wiki.squid-cache.org/SquidFaq/InnerWorkings#What_is_a_half-closed_filedescriptor.3F
+  this.httpAllowHalfOpen = false;
+
+  this.on('connection', connectionListener);
+
+  this.timeout = 2 * 60 * 1000;
+  this.keepAliveTimeout = 5000;
+  this._pendingResponseData = 0;
+  this.maxHeadersCount = null;
+}
+```
+
+观察者 connectionListener 处理 connection 事件。
+这时，则需要一个 HTTP parser 来解析通过 TCP 传输过来的数据：
+
+lib/_http_server.js
+```
+function connectionListener(socket) {
+  debug('SERVER new http connection');
+
+  httpSocketSetup(socket);
+
+  // Ensure that the server property of the socket is correctly set.
+  // See https://github.com/nodejs/node/issues/13435
+  if (socket.server === null)
+    socket.server = this;
+
+  // If the user has added a listener to the server,
+  // request, or response, then it's their responsibility.
+  // otherwise, destroy on timeout by default
+  if (this.timeout)
+    socket.setTimeout(this.timeout);
+  socket.on('timeout', socketOnTimeout);
+
+  var parser = parsers.alloc();
+  parser.reinitialize(HTTPParser.REQUEST);
+  parser.socket = socket;
+  socket.parser = parser;
+  parser.incoming = null;
+
+  // Propagate headers limit from server instance to parser
+  if (typeof this.maxHeadersCount === 'number') {
+    parser.maxHeaderPairs = this.maxHeadersCount << 1;
+  } else {
+    // Set default value because parser may be reused from FreeList
+    parser.maxHeaderPairs = 2000;
+  }
+
+  var state = { 
+    onData: null,
+    onEnd: null,
+    onClose: null,
+    onDrain: null,
+    outgoing: [], 
+    incoming: [], 
+    // `outgoingData` is an approximate amount of bytes queued through all
+    // inactive responses. If more data than the high watermark is queued - we
+    // need to pause TCP socket/HTTP parser, and wait until the data will be
+    // sent to the client.
+    outgoingData: 0,
+    keepAliveTimeoutSet: false
+  };  
+  state.onData = socketOnData.bind(undefined, this, socket, parser, state);
+  state.onEnd = socketOnEnd.bind(undefined, this, socket, parser, state);
+  state.onClose = socketOnClose.bind(undefined, socket, state);
+  state.onDrain = socketOnDrain.bind(undefined, socket, state);
+  socket.on('data', state.onData);
+  socket.on('error', socketOnError);
+  socket.on('end', state.onEnd);
+  socket.on('close', state.onClose);
+  socket.on('drain', state.onDrain);
+  parser.onIncoming = parserOnIncoming.bind(undefined, this, socket, state);
+
+  // We are consuming socket, so it won't get any actual data
+  socket.on('resume', onSocketResume);
+  socket.on('pause', onSocketPause);
+
+  // Override on to unconsume on `data`, `readable` listeners
+  socket.on = socketOnWrap;
+
+  // We only consume the socket if it has never been consumed before.
+  var external = socket._handle._externalStream;
+  if (!socket._handle._consumed && external) {
+    parser._consumed = true;
+    socket._handle._consumed = true;
+    parser.consume(external);
+  }
+  parser[kOnExecute] =
+    onParserExecute.bind(undefined, this, socket, parser, state);
+
+  socket._paused = false;
+}
+
+```
+
+
+
 参考链接：
 ```
 https://yjhjstz.gitbooks.io/deep-into-node/chapter1/
