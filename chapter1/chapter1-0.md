@@ -275,3 +275,45 @@ console.log(module.exports) //{exports: {name: "fzxa"}}
 
 module.exports就是为了解决上述exports直接赋值，会导致抛出不成功的问题而产生的。有了它，我们就可以这样来抛出一个模块了.
 
+### require方法
+Node中引入模块的机制步骤
+1. 路径分析
+2. 文件定位
+3. 编译执行
+Node对引入过的模块也会进行缓存。不同的地方是，node缓存的是编译执行之后的对象而不是静态文件
+
+Module._load的源码：
+```
+Module._load = function(request, parent, isMain) {
+
+  //  计算绝对路径
+  var filename = Module._resolveFilename(request, parent);
+
+  //  第一步：如果有缓存，取出缓存
+  var cachedModule = Module._cache[filename];
+  if (cachedModule) {
+    return cachedModule.exports;
+
+  // 第二步：是否为内置模块
+  if (NativeModule.exists(filename)) {
+    return NativeModule.require(filename);
+  }
+
+  // 第三步：生成模块实例，存入缓存
+  var module = new Module(filename, parent);
+  Module._cache[filename] = module;
+
+  // 第四步：加载模块
+  try {
+    module.load(filename);
+    hadException = false;
+  } finally {
+    if (hadException) {
+      delete Module._cache[filename];
+    }
+  }
+
+  // 第五步：输出模块的exports属性
+  return module.exports;
+};
+```
