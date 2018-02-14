@@ -206,7 +206,7 @@ inline int Start(Isolate* isolate, IsolateData* isolate_data,
 - 如果也没有io, Node进程退出
 - 如果有io观察者， 执行uv_run()进入epoll_wait()线程挂起，io观察者检测是否有数据返回callback, 没有数据则会一直在epoll_wait()等待执行 server.listen(3000)会挂起一直等待。
 
-###  Module对象原理
+###  Module对象
 根据CommonJS规范，每一个文件就是一个模块，在每个模块中，都会有一个module对象，这个对象就指向当前的模块。
 module对象具有以下属性：
 - id：当前模块的bi
@@ -243,3 +243,35 @@ Module {
      '/Users/node_modules',
      '/node_modules' ] }
 ```
+module对象具有一个exports属性，该属性就是用来对外暴露变量、方法或整个模块的。当其他的文件require进来该模块的时候，实际上就是读取了该模块module对象的exports属性
+
+### exports对象
+exports和module.exports都是引用类型的变量，而且这两个对象指向同一块内存地址
+```
+exports = module.exports = {};
+```
+例子：
+```
+var module = {
+    exports: {}
+}
+
+var exports = module.exports
+
+function change(exports) {
+    //为形参添加属性，是会同步到外部的module.exports对象的
+    exports.name = "fzxa"
+    //在这里修改了exports的引用，并不会影响到module.exports
+    exports = {
+        age: 24
+    }
+    console.log(exports) //{ age: 24 }
+}
+
+change(exports)
+console.log(module.exports) //{exports: {name: "fzxa"}}
+```
+直接给exports赋值，会改变当前模块内部的形参exports对象的引用，也就是说当前的exports已经跟外部的module.exports对象没有任何关系了，所以这个改变是不会影响到module.exports的
+
+module.exports就是为了解决上述exports直接赋值，会导致抛出不成功的问题而产生的。有了它，我们就可以这样来抛出一个模块了.
+
