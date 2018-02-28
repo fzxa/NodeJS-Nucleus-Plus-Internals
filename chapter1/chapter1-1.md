@@ -190,5 +190,54 @@ function ServerResponse(req) {
   }
 }
 //继承自OutgoingMessage,为OM的一个子类，所以回调函数里的res也是OM的一个实例
+//来自_http_outgoing私有模块  
+//const OutgoingMessage = require('_http_outgoing').OutgoingMessage;
 util.inherits(ServerResponse, OutgoingMessage);
+```
+
+到此res线找到，res为ServerMessage的实例，也是OutgoingMessage的实例
+```
+function OutgoingMessage() {
+  Stream.call(this);
+  
+  //返回一些与服务器有关的属性
+  // Queue that holds all currently pending data, until the response will be
+  // assigned to the socket (until it will its turn in the HTTP pipeline).
+  this.output = []; 
+  this.outputEncodings = []; 
+  this.outputCallbacks = []; 
+
+  // `outputSize` is an approximate measure of how much data is queued on this
+  // response. `_onPendingData` will be invoked to update similar global
+  // per-connection counter. That counter will be used to pause/unpause the
+  // TCP socket and HTTP Parser and thus handle the backpressure.
+  this.outputSize = 0;
+
+  this.writable = true;
+
+  this._last = false;
+  this.upgrading = false;
+  this.chunkedEncoding = false;
+  this.shouldKeepAlive = true;
+  this.useChunkedEncodingByDefault = true;
+  this.sendDate = false;
+  this._removedConnection = false;
+  this._removedContLen = false;
+  this._removedTE = false;
+
+  this._contentLength = null;
+  this._hasBody = true;
+  this._trailer = ''; 
+
+  this.finished = false;
+  this._headerSent = false;
+
+  this.socket = null;
+  this.connection = null;
+  this._header = null;
+  this[outHeadersKey] = null;
+
+  this._onPendingData = noopPendingOutput;
+}
+util.inherits(OutgoingMessage, Stream); //继承自Stream  
 ```
