@@ -16,7 +16,12 @@ http.createServer((req, res) => {
 
 #### Server
 1. 打开node-v8.9.3/lib/http.js 
-首先引入的是http模块
+
+首先引入的是http模块,模块抛出公共方法调用createServer实际上是返回Server实例，
+
+createServer里面的回调函数（参数requestListener）
+
+直接作为了Server的参数requestListener,而这个Server实际上是require('_http_server')
 ```
 'use strict';
 
@@ -59,4 +64,32 @@ module.exports = {
   get,
   request
 };
+```
+
+打开文件node-v8.9.3/lib/_http_server.js 260行
+
+实际上是为这个requestListener函数与'request'事件绑定到了一起
+   而'request '是方法parserOnIncoming里面抛出的一个事件
+```
+function Server(requestListener) {
+  if (!(this instanceof Server)) return new Server(requestListener);
+  net.Server.call(this, { allowHalfOpen: true }); 
+
+  if (requestListener) {
+    this.on('request', requestListener);
+  }
+
+  // Similar option to this. Too lazy to write my own docs.
+  // http://www.squid-cache.org/Doc/config/half_closed_clients/
+  // http://wiki.squid-cache.org/SquidFaq/InnerWorkings#What_is_a_half-closed_filedescriptor.3F
+  this.httpAllowHalfOpen = false;
+
+  this.on('connection', connectionListener);
+
+  this.timeout = 2 * 60 * 1000;
+  this.keepAliveTimeout = 5000;
+  this._pendingResponseData = 0;
+  this.maxHeadersCount = null;
+}
+util.inherits(Server, net.Server);
 ```
