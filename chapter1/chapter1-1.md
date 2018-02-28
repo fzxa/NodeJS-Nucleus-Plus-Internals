@@ -98,6 +98,7 @@ util.inherits(Server, net.Server);
 ```
 
 #### 观察者request何时触发？
+调用emit方法，将request事件发送给每一个监听的实例，并且传入req,res.
 _http_server.js  592行 602行
 ```
 //处理具体解析完毕的请求
