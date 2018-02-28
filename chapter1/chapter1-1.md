@@ -74,8 +74,9 @@ module.exports = {
 function Server(requestListener) {
   if (!(this instanceof Server)) return new Server(requestListener);
   net.Server.call(this, { allowHalfOpen: true }); 
-
-  if (requestListener) {
+ 
+  //如果有回调函数，对当前实例进行监听，若request有事件触发则调用回调
+  if (requestListener) {
     this.on('request', requestListener);
   }
 
@@ -83,13 +84,15 @@ function Server(requestListener) {
   // http://www.squid-cache.org/Doc/config/half_closed_clients/
   // http://wiki.squid-cache.org/SquidFaq/InnerWorkings#What_is_a_half-closed_filedescriptor.3F
   this.httpAllowHalfOpen = false;
-
-  this.on('connection', connectionListener);
+  //当启动server实例时，观察者建立connect事件
+  this.on('connection', connectionListener);
 
   this.timeout = 2 * 60 * 1000;
   this.keepAliveTimeout = 5000;
   this._pendingResponseData = 0;
   this.maxHeadersCount = null;
 }
+
+//net.Server继承Server
 util.inherits(Server, net.Server);
 ```
