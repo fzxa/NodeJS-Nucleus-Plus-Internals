@@ -68,8 +68,8 @@ module.exports = {
 
 打开文件node-v8.9.3/lib/_http_server.js 260行
 
-实际上是为这个requestListener函数与'request'事件绑定到了一起
-   而'request '是方法parserOnIncoming里面抛出的一个事件
+实际上是为这个requestListener函数与'request'事件绑定到了一起，而'request '是方法parserOnIncoming里面抛出的一个事件
+   
 ```
 function Server(requestListener) {
   if (!(this instanceof Server)) return new Server(requestListener);
@@ -98,7 +98,12 @@ util.inherits(Server, net.Server);
 ```
 
 #### 观察者request何时触发？
-调用emit方法，将request事件发送给每一个监听的实例，并且传入req,res.
+调用emit方法，将request事件发送给每一个监听的实例，并且传入req,res
+
+self.emit('request'.req,res);这个事件也会同时抛出req和res两个对象
+
+req变量与另一个叫做shouldKeepAlive的变量作参同时传入此函数parserOnIncoming
+
 _http_server.js  592行 602行
 ```
 //处理具体解析完毕的请求
