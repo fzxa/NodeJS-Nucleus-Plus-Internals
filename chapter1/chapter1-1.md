@@ -125,7 +125,7 @@ function parserOnIncoming(server, socket, state, req, keepAlive) {
       socket.pause();
     }
   }
-
+  //服务器通过ServerResponse实例，来个请求方发送数据。包括发送响应表头，发送响应主体
   var res = new ServerResponse(req);
   res._onPendingData = updateOutgoingData.bind(undefined, socket, state);
 
