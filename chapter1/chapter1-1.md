@@ -171,3 +171,24 @@ function parserOnIncoming(server, socket, state, req, keepAlive) {
   return false; // Not a HEAD response. (Not even a response!)
 }
 ```
+
+ServerResponse 实现了 Writable Stream interface，内部也是通过socket来发送信息。
+res，发现为ServerResponse（）的实例并传入req
+```
+function ServerResponse(req) {
+  OutgoingMessage.call(this);
+
+  if (req.method === 'HEAD') this._hasBody = false;
+
+  this.sendDate = true;
+  this._sent100 = false;
+  this._expect_continue = false;
+
+  if (req.httpVersionMajor < 1 || req.httpVersionMinor < 1) {
+    this.useChunkedEncodingByDefault = chunkExpression.test(req.headers.te);
+    this.shouldKeepAlive = false;
+  }
+}
+//继承自OutgoingMessage,为OM的一个子类，所以回调函数里的res也是OM的一个实例
+util.inherits(ServerResponse, OutgoingMessage);
+```
