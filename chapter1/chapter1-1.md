@@ -96,3 +96,70 @@ function Server(requestListener) {
 //net.Server继承Server
 util.inherits(Server, net.Server);
 ```
+
+#### 观察者request何时触发？
+_http_server.js  592行 602行
+```
+//处理具体解析完毕的请求
+function parserOnIncoming(server, socket, state, req, keepAlive) {
+  resetSocketTimeout(server, socket, state);
+
+  state.incoming.push(req);
+
+  // If the writable end isn't consuming, then stop reading
+  // so that we don't become overwhelmed by a flood of
+  // pipelined requests that may never be resolved.
+  if (!socket._paused) {
+    var ws = socket._writableState;
+    if (ws.needDrain || state.outgoingData >= ws.highWaterMark) {
+      socket._paused = true;
+      // We also need to pause the parser, but don't do that until after
+      // the call to execute, because we may still be processing the last
+      // chunk.
+      socket.pause();
+    }
+  }
+
+  var res = new ServerResponse(req);
+  res._onPendingData = updateOutgoingData.bind(undefined, socket, state);
+
+  res.shouldKeepAlive = keepAlive;
+  DTRACE_HTTP_SERVER_REQUEST(req, socket);
+  LTTNG_HTTP_SERVER_REQUEST(req, socket);
+  COUNTER_HTTP_SERVER_REQUEST();
+
+  if (socket._httpMessage) {
+    // There are already pending outgoing res, append.
+    state.outgoing.push(res);
+  } else {
+    res.assignSocket(socket);
+  }
+
+  // When we're finished writing the response, check if this is the last
+  // response, if so destroy the socket.
+  res.on('finish',
+         resOnFinish.bind(undefined, req, res, socket, state, server));
+
+  if (req.headers.expect !== undefined &&
+      (req.httpVersionMajor === 1 && req.httpVersionMinor === 1)) {
+    if (continueExpression.test(req.headers.expect)) {
+      res._expect_continue = true;
+
+      if (server.listenerCount('checkContinue') > 0) {
+        server.emit('checkContinue', req, res);
+      } else {
+        res.writeContinue();
+        server.emit('request', req, res);
+      }
+    } else if (server.listenerCount('checkExpectation') > 0) {
+      server.emit('checkExpectation', req, res);
+    } else {
+      res.writeHead(417);
+      res.end();
+    }
+  } else {
+    server.emit('request', req, res);
+  }
+  return false; // Not a HEAD response. (Not even a response!)
+}
+```
