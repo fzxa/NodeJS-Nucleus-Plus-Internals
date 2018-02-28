@@ -48,7 +48,7 @@ function get(options, cb) {
   req.end();
   return req;
 }
-
+//http模块暴露的所有公共方法
 module.exports = { 
   _connectionListener: server._connectionListener,
   METHODS: common.methods.slice().sort(),
@@ -60,7 +60,7 @@ module.exports = {
   OutgoingMessage: outgoing.OutgoingMessage,
   Server,
   ServerResponse: server.ServerResponse,
-  createServer, //暴露createServer方法
+  createServer, 
   get,
   request
 };
