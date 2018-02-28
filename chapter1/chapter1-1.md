@@ -14,7 +14,7 @@ http.createServer((req, res) => {
 });
 ```
 
-#### Server
+#### HTTP模块
 1. 打开node-v8.9.3/lib/http.js 
 
 首先引入的是http模块,模块抛出公共方法调用createServer实际上是返回Server实例，
