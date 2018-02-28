@@ -241,3 +241,5 @@ function OutgoingMessage() {
 }
 util.inherits(OutgoingMessage, Stream); //继承自Stream  
 ```
+流程图演示：
+![image](images/node-server-res.png)
