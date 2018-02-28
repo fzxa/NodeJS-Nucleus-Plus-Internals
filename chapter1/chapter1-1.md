@@ -14,7 +14,7 @@ http.createServer((req, res) => {
 ```
 
 #### Server
-1. 打开node-v8.9.3/lib／http.js 
+1. 打开node-v8.9.3/lib/http.js 
 首先引入的是http模块
 ```
 'use strict';
