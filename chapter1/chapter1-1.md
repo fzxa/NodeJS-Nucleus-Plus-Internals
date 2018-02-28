@@ -1,7 +1,8 @@
 ### NodeJS源码解析 - HTTP Server模块
 
 上一篇文章提到了hello world中的http server 
-http是nodejs中重要的模块之一
+
+http是nodejs中重要的模块之一，有必要了解它的运行原理
 
 ```
 var http = require('http');
