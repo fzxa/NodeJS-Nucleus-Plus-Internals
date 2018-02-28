@@ -100,7 +100,7 @@ util.inherits(Server, net.Server);
 #### 观察者request何时触发？
 调用emit方法，将request事件发送给每一个监听的实例，并且传入req,res
 
-self.emit('request'.req,res);这个事件也会同时抛出req和res两个对象
+server.emit('request', req, res); 这个事件也会同时抛出req和res两个对象
 
 req变量与另一个叫做shouldKeepAlive的变量作参同时传入此函数parserOnIncoming
 
@@ -155,6 +155,7 @@ function parserOnIncoming(server, socket, state, req, keepAlive) {
         server.emit('checkContinue', req, res);
       } else {
         res.writeContinue();
+        //送给每一个监听器的实例并传入req&res
         server.emit('request', req, res);
       }
     } else if (server.listenerCount('checkExpectation') > 0) {
@@ -164,6 +165,7 @@ function parserOnIncoming(server, socket, state, req, keepAlive) {
       res.end();
     }
   } else {
+    //送给每一个监听器的实例并传入req&res
     server.emit('request', req, res);
   }
   return false; // Not a HEAD response. (Not even a response!)
