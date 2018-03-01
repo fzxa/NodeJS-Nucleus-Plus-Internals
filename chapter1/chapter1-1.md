@@ -1,8 +1,9 @@
 ### NodeJS源码解析 - HTTP Server模块
 
-上一篇文章提到了hello world中的http server 
 
 http是nodejs中重要的模块之一，有必要了解它的运行原理
+
+当node在收到一个http请求，会创建一个http.Server，注册并监听request，可以先从源码中_http_server.js开始分解
 
 ```
 var http = require('http');
