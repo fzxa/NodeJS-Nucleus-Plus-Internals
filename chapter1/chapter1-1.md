@@ -267,7 +267,15 @@ onIncoming在skipBody = parser.onIncoming(parser.incoming, shouldKeepAlive)中�
 ```
  function parserOnHeadersComplete(...) {
      ...
-      skipBody = parser.onIncoming(parser.incoming, shouldKeepAlive);
+     //IncomingMessage的实例并将套接字作为参数传入  
+     parser.incoming = new IncomingMessage(parser.socket);
+     parser.incoming.httpVersionMajor = versionMajor;
+     parser.incoming.httpVersionMinor = versionMinor;
+     parser.incoming.httpVersion = `${versionMajor}.${versionMinor}`;
+     parser.incoming.url = url;
+     ...
+     //onIncoming 这里被调用
+     skipBody = parser.onIncoming(parser.incoming, shouldKeepAlive);
      ...
  }
  ```
