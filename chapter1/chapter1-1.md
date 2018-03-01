@@ -267,8 +267,8 @@ onIncoming在skipBody = parser.onIncoming(parser.incoming, shouldKeepAlive)中�
 ```
  function parserOnHeadersComplete(...) {
      ...
-     //IncomingMessage的实例并将套接字作为参数传入  
-     parser.incoming = new IncomingMessage(parser.socket);
+     //IncomingMessage的实例并将套接字作为参数传入 ,来自_http_common.js模块
+     parser.incoming = new IncomingMessage(parser.socket);
      parser.incoming.httpVersionMajor = versionMajor;
      parser.incoming.httpVersionMinor = versionMinor;
      parser.incoming.httpVersion = `${versionMajor}.${versionMinor}`;
