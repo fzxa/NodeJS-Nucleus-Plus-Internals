@@ -97,7 +97,7 @@ function Server(requestListener) {
 util.inherits(Server, net.Server);
 ```
 
-#### 观察者request何时触发？
+#### res过程？
 调用emit方法，将request事件发送给每一个监听的实例，并且传入req,res
 
 server.emit('request', req, res); 这个事件也会同时抛出req和res两个对象
@@ -248,7 +248,7 @@ util.inherits(OutgoingMessage, Stream); //继承自Stream
 ![image](images/node-server-res.png)
 
 
-#### req
+#### req 过程
 req，在parserOnIncoming()作为参数传入
 
 parserOnIncoming()在哪里被调用?
@@ -282,6 +282,83 @@ onIncoming在skipBody = parser.onIncoming(parser.incoming, shouldKeepAlive)中�
  流程图演示：
 ![image](images/node-server-req.png)
 
+
+#### Listen 过程
+基于ner.js模块
+Server Connection事件在net.Server.call(this, { allowHalfOpen: true })触发
+connection会在onconnection中触发handle
+```
+function onconnection(err, clientHandle) {
+  var handle = this;
+  var self = handle.owner;
+
+  debug('onconnection');
+
+  if (err) {
+    self.emit('error', errnoException(err, 'accept'));
+    return;
+  }
+
+  if (self.maxConnections && self._connections >= self.maxConnections) {
+    clientHandle.close();
+    return;
+  }
+
+  var socket = new Socket({
+    handle: clientHandle,
+    allowHalfOpen: self.allowHalfOpen,
+    pauseOnCreate: self.pauseOnConnect
+  });  
+  socket.readable = socket.writable = true;
+
+
+  self._connections++;
+  socket.server = self;
+  socket._server = self;
+
+  DTRACE_NET_SERVER_CONNECTION(socket);
+  LTTNG_NET_SERVER_CONNECTION(socket);
+  COUNTER_NET_SERVER_CONNECTION(socket);
+  
+  self.emit('connection', socket);
+}
+```
+
+listen2调用setupListenHandle方法，注册onconnection
+```
+function setupListenHandle(address, port, addressType, backlog, fd) {
+    ...
+    this._handle.onconnection = onconnection
+    ...
+}
+```
+_listen2注册handle, 在listen里被调用
+```
+Server.prototype._listen2 = setupListenHandle;
+server._listen2(address, port, addressType, backlog, fd);
+```
+
+listen在Server原型上，所以在代码里的http.createServer()实例上有listen()方法
+```
+Server.prototype.listen = function(...args) {
+    ...
+    if (options instanceof TCP) {
+      this._handle = options;
+      this[async_id_symbol] = this._handle.getAsyncId();
+      listenInCluster(this, null, -1, -1, backlogFromArgs);
+      return this;
+    }
+    ...
+```
+
+```
+Socket.prototype.listen = function() {
+  debug('socket.listen');
+  this.on('connection', arguments[0]);
+  listenInCluster(this, null, null, null);
+};
+
+```
 
 
 ```
