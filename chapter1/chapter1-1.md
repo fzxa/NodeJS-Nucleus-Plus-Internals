@@ -249,6 +249,9 @@ util.inherits(OutgoingMessage, Stream); //继承自Stream
 
 
 #### req
+req，在parserOnIncoming()作为参数传入
+
+parserOnIncoming()在哪里被调用?
 ```
 // _http_server.js 345行
 parser.onIncoming = parserOnIncoming.bind(undefined, this, socket, state);
