@@ -279,6 +279,7 @@ onIncoming在skipBody = parser.onIncoming(parser.incoming, shouldKeepAlive)中�
      ...
  }
  ```
+ 流程图演示：
 ![image](images/node-server-req.png)
 
 
