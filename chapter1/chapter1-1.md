@@ -166,6 +166,8 @@ function parserOnIncoming(server, socket, state, req, keepAlive) {
     }
   } else {
     //送给每一个监听器的实例并传入req&res
+    // res实际上是ServerResponse的实例
+    // var res = new ServerResponse(req);
     server.emit('request', req, res);
   }
   return false; // Not a HEAD response. (Not even a response!)
