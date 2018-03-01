@@ -265,7 +265,7 @@ function connectionListener(socket) {
 parsers在_http_common.js抛出
 onIncoming在skipBody = parser.onIncoming(parser.incoming, shouldKeepAlive)中调用
 ```
- function parserOnHeadersComplete(versionMajor, versionMinor, headers, method, url, statusCode, statusMessage, upgrade, shouldKeepAlive) {
+ function parserOnHeadersComplete(...) {
      ...
       skipBody = parser.onIncoming(parser.incoming, shouldKeepAlive);
      ...
