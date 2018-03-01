@@ -360,7 +360,7 @@ Socket.prototype.listen = function() {
 
 ```
 Listen流程图：
-![image](image/node-server-listen.png)
+![image](images/node-server-listen.png)
 
 ```
 参考链接：
