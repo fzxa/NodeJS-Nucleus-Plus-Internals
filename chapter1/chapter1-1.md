@@ -256,10 +256,21 @@ parserOnIncoming()在哪里被调用?
 // _http_server.js 345行
 function connectionListener(socket) {
     ...
+    var parser = parsers.alloc();
     parser.onIncoming = parserOnIncoming.bind(undefined, this, socket, state);
     ...
 }
 ```
+
+parsers在_http_common.js抛出
+onIncoming在skipBody = parser.onIncoming(parser.incoming, shouldKeepAlive)中调用
+```
+ function parserOnHeadersComplete(versionMajor, versionMinor, headers, method, url, statusCode, statusMessage, upgrade, shouldKeepAlive) {
+     ...
+      skipBody = parser.onIncoming(parser.incoming, shouldKeepAlive);
+     ...
+ }
+ ```
 
 ```
 参考链接：
