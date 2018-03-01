@@ -248,16 +248,15 @@ util.inherits(OutgoingMessage, Stream); //继承自Stream
 ![image](images/node-server-res.png)
 
 
+#### req
+```
+// _http_server.js 345行
+parser.onIncoming = parserOnIncoming.bind(undefined, this, socket, state);
+```
+
 ```
 参考链接：
 https://yjhjstz.gitbooks.io/deep-into-node/chapter10/chapter10-1.html
 https://www.cnblogs.com/chyingp/p/node-learning-guide-http.html
 http://blog.csdn.net/sinat_22996989/article/details/51496010
-```
-
-
-#### req
-```
-// _http_server.js 345行
-parser.onIncoming = parserOnIncoming.bind(undefined, this, socket, state);
 ```
