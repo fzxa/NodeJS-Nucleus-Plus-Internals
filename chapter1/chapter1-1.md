@@ -286,6 +286,7 @@ onIncoming在skipBody = parser.onIncoming(parser.incoming, shouldKeepAlive)中�
 #### Listen 过程
 基于ner.js模块
 Server Connection事件在net.Server.call(this, { allowHalfOpen: true })触发
+
 connection会在onconnection中触发handle
 ```
 function onconnection(err, clientHandle) {
