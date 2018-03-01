@@ -274,7 +274,7 @@ onIncoming在skipBody = parser.onIncoming(parser.incoming, shouldKeepAlive)中�
      parser.incoming.httpVersion = `${versionMajor}.${versionMinor}`;
      parser.incoming.url = url;
      ...
-     //onIncoming 这里被调用
+     //onIncoming 这里被调用 parser.incoming相当于req
      skipBody = parser.onIncoming(parser.incoming, shouldKeepAlive);
      ...
  }
