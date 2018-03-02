@@ -53,7 +53,7 @@ Node.js主要分为四大部分，Node Standard Library，Node Bindings，V8，L
 
 ### Hello World 底层运行过程
 [官方Hello world代码](https://nodejs.org/en/about/)
-```
+```js
 #app.js
 const http = require('http');
 
@@ -81,7 +81,7 @@ server.listen(port, hostname, () => {
 ### 1.0 从main执行到js
 入口 src/node_main.cc 106行 通过 src/node.cc 调用 node::Start(argc, argv);
 node_main.cc
-```
+```c
 namespace node {
   extern bool linux_at_secure;
 }  // namespace node
@@ -120,7 +120,7 @@ Start() -> LoadEnviroment() -> ExecuteString()
 
 
 node.cc
-```
+```c
 # Nodejs启动入口， 
 inline int Start(Isolate* isolate, IsolateData* isolate_data,
                  int argc, const char* const* argv,
@@ -218,7 +218,7 @@ module对象具有以下属性：
 - loaded：一个布尔值，表示当前模块是否已经被完全加载
 
 示例：
-```
+```js
 module.exports = { 
     name: 'fzxa',
     getAge: function(age){
@@ -228,7 +228,7 @@ module.exports = {
 console.log(module)
 ```
 执行node module.js 返回如下
-```
+```js
 Module {
   id: '.',
   exports: { name: 'fzxa', getAge: [Function: getAge] },
@@ -251,7 +251,7 @@ exports和module.exports都是引用类型的变量，而且这两个对象指�
 exports = module.exports = {};
 ```
 例子：
-```
+```js
 var module = {
     exports: {}
 }
@@ -283,7 +283,7 @@ Node中引入模块的机制步骤
 Node对引入过的模块也会进行缓存。不同的地方是，node缓存的是编译执行之后的对象而不是静态文件
 
 Module._load的源码：
-```
+```js
 Module._load = function(request, parent, isMain) {
 
   //  计算绝对路径
@@ -318,7 +318,7 @@ Module._load = function(request, parent, isMain) {
 };
 ```
 在Module._load方法的内部调用了Module._findPath这个方法，这个方法是用来返回模块的绝对路径的，源码如下：
-```
+```js
 Module._findPath = function(request, paths) {
 
   // 列出所有可能的后缀名：.js，.json, .node
@@ -400,7 +400,7 @@ Object.keys(require.cache).forEach(function(key) {
 requestListener 回调函数作为观察者，监听了 request 事件， 默认超时时间为2分
 
 lib/_http_server.js
-```
+```js
 function Server(requestListener) {
   if (!(this instanceof Server)) return new Server(requestListener);
   net.Server.call(this, { allowHalfOpen: true }); 
@@ -427,7 +427,7 @@ function Server(requestListener) {
 这时，则需要一个 HTTP parser 来解析通过 TCP 传输过来的数据：
 
 lib/_http_server.js
-```
+```js
 function connectionListener(socket) {
   debug('SERVER new http connection');
 
