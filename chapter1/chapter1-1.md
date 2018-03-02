@@ -5,7 +5,7 @@ http是nodejs中重要的模块之一，有必要了解它的运行原理
 
 回到helloworld ,当node在收到一个http请求，会创建一个http.Server，注册并监听request。
 
-```
+```js
 var http = require('http');
 http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
@@ -23,7 +23,7 @@ http.createServer((req, res) => {
 createServer里面的回调函数（参数requestListener）
 
 直接作为了Server的参数requestListener,而这个Server实际上是require('_http_server')
-```
+```js
 'use strict';
 
 const agent = require('_http_agent');
@@ -71,7 +71,7 @@ module.exports = {
 
 实际上是为这个requestListener函数与'request'事件绑定到了一起，而'request '是方法parserOnIncoming里面抛出的一个事件
    
-```
+```js
 function Server(requestListener) {
   if (!(this instanceof Server)) return new Server(requestListener);
   net.Server.call(this, { allowHalfOpen: true }); 
@@ -106,7 +106,7 @@ server.emit('request', req, res); 这个事件也会同时抛出req和res两个�
 req变量与另一个叫做shouldKeepAlive的变量作参同时传入此函数parserOnIncoming
 
 _http_server.js  592行 602行
-```
+```js
 //处理具体解析完毕的请求
 function parserOnIncoming(server, socket, state, req, keepAlive) {
   resetSocketTimeout(server, socket, state);
@@ -177,7 +177,7 @@ function parserOnIncoming(server, socket, state, req, keepAlive) {
 
 ServerResponse 实现了 Writable Stream interface，内部也是通过socket来发送信息。
 res，发现为ServerResponse（）的实例并传入req
-```
+```js
 function ServerResponse(req) {
   OutgoingMessage.call(this);
 
@@ -199,7 +199,7 @@ util.inherits(ServerResponse, OutgoingMessage);
 ```
 
 到此res线找到，res为ServerMessage的实例，也是OutgoingMessage的实例
-```
+```js
 function OutgoingMessage() {
   Stream.call(this);
   
@@ -253,7 +253,7 @@ util.inherits(OutgoingMessage, Stream); //继承自Stream
 req，在parserOnIncoming()作为参数传入
 
 parserOnIncoming()在哪里被调用?
-```
+```js
 // _http_server.js 345行
 function connectionListener(socket) {
     ...
@@ -289,7 +289,7 @@ onIncoming在skipBody = parser.onIncoming(parser.incoming, shouldKeepAlive)中�
 Server Connection事件在net.Server.call(this, { allowHalfOpen: true })触发
 
 connection会在onconnection中触发handle
-```
+```js
 function onconnection(err, clientHandle) {
   var handle = this;
   var self = handle.owner;
@@ -327,7 +327,7 @@ function onconnection(err, clientHandle) {
 ```
 
 listen2调用setupListenHandle方法，注册onconnection
-```
+```js
 function setupListenHandle(address, port, addressType, backlog, fd) {
     ...
     this._handle.onconnection = onconnection
@@ -335,13 +335,13 @@ function setupListenHandle(address, port, addressType, backlog, fd) {
 }
 ```
 _listen2注册handle, 在listen里被调用
-```
+```js
 Server.prototype._listen2 = setupListenHandle;
 server._listen2(address, port, addressType, backlog, fd);
 ```
 
 listen在Server原型上，所以在代码里的http.createServer()实例上有listen()方法
-```
+```js
 Server.prototype.listen = function(...args) {
     ...
     if (options instanceof TCP) {
@@ -353,7 +353,7 @@ Server.prototype.listen = function(...args) {
     ...
 ```
 
-```
+```js
 Socket.prototype.listen = function() {
   debug('socket.listen');
   this.on('connection', arguments[0]);
