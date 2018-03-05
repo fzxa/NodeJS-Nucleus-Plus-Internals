@@ -10,8 +10,12 @@ Node版本基于v8.9.3
  
  [1-1 NodeJS源码解析 - HTTP Server模块](https://github.com/fzxa/NodeJS-Nucleus-Plus-Internals/blob/master/chapter1/chapter1-1-HTTP%20Server%E6%A8%A1%E5%9D%97.md)
  
- 持续更新..
-  
+持续更新..
+ 
+NodeJS系统架构图：
+![image](node-system.png)
+
+
  整体流程图
  
  ![image](https://github.com/fzxa/NodeJS-Nucleus-Plus-Internals/blob/master/chapter1/images/node-loop.png)
