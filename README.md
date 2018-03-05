@@ -12,14 +12,14 @@ Node版本基于v8.9.3
  
 持续更新..
  
-###NodeJS系统架构图：
+### NodeJS系统架构图：
 ![image](node-system.png)
  - Javascript V8 Engine: Nodejs javascript运行引擎
  - Libuv 是专门为Node.js开发的一个封装库，提供跨平台的异步I/O能力.
  - C-ares：提供了异步处理 DNS 相关的能力。
  - http_parser、OpenSSL、zlib 等：提供包括 http 解析、SSL、数据压缩等其他的能力。
  
-###整体流程图
+### 整体流程图
  
  ![image](https://github.com/fzxa/NodeJS-Nucleus-Plus-Internals/blob/master/chapter1/images/node-loop.png)
  
