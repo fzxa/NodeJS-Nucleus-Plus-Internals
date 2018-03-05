@@ -1,7 +1,7 @@
 ### Node js2c源码分析
 
 node.gyp
-```json
+```
   {   
       'target_name': 'node_js2c',
       'type': 'none',
