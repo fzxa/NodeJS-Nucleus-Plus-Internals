@@ -19,7 +19,7 @@ Node版本基于v8.9.3
  - C-ares：提供了异步处理 DNS 相关的能力。
  - http_parser、OpenSSL、zlib 等：提供包括 http 解析、SSL、数据压缩等其他的能力。
  
-### 整体流程图
+### NodeJS流程图
  
  ![image](https://github.com/fzxa/NodeJS-Nucleus-Plus-Internals/blob/master/chapter1/images/node-loop.png)
  
