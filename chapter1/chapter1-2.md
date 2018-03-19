@@ -1,4 +1,4 @@
-### Node Stream深入分析
+### Node Stream模块分析
 
 Stream在平时业务开发时很少用到， 单很多模块都是机遇stream实现的，引用官方文档的解释：
 
