@@ -121,6 +121,26 @@ rs._read = function () {
 
 rs.pipe(process.stdout);//输出 abcdefghijklmnopqrstuvwxyz
 ```
+
+还可以通过监听事件readable，触发时手工读取chunk数据:
+
+一旦注册了readable事件，必须手工读取read数据，否则数据就会流失
+
+```js
+var Read = require('stream').Readable;
+var r = new Read();
+
+r.push('hello');
+r.push('world');
+r.push(null);
+
+r.on('readable', function () {
+    var chunk = r.read();
+    console.log('get data by readable event: ', chunk.toString())
+});
+
+// get data by readable event:  hello world!
+```
 #### 注意：process.stdout之前已经将内容推送进readable流rs中，但是所有的数据依然是可写的
 
 
@@ -142,3 +162,17 @@ process.stdin.pipe(ws);
 ```
 
 ### duplex 全双工流
+
+```js 
+const Readable = require('_stream_readable');
+const Writable = require('_stream_writable');
+
+util.inherits(Duplex, Readable);
+
+var keys = Object.keys(Writable.prototype);
+for (var v = 0; v < keys.length; v++) {
+  var method = keys[v];
+  if (!Duplex.prototype[method])
+    Duplex.prototype[method] = Writable.prototype[method];
+}
+```
