@@ -143,36 +143,51 @@ r.on('readable', function () {
 ```
 #### 注意：process.stdout之前已经将内容推送进readable流rs中，但是所有的数据依然是可写的
 
+### Readable Stream的模式
 
-### writable流
-writable流 只流进不能流出的流:
-定义一个._write(chunk,enc,next)函数
+Readable Stream 存在两种模式(flowing mode 与 paused mode)，
+这两种模式决定了chunk数据流动的方式---自动流动还是手工流动。那如何触发这两种模式呢：
 
-在从一个readable流向一个writable流传数据的过程中，数据会自动被转换为Buffer对象
+flowing mode: 注册事件data、调用resume方法、调用pipe方法
 
+paused mode: 调用pause方法(没有pipe方法)、移除data事件 && unpipe所有pipe
 ```js
-var Writable = require('stream').Writable;
-var ws = Writable();
-ws._write = function (chunk, enc, next) {
-    console.dir(chunk);
-    next();
-};
-
-process.stdin.pipe(ws);
-```
-
-### duplex 全双工流
-
-```js 
-const Readable = require('_stream_readable');
-const Writable = require('_stream_writable');
-
-util.inherits(Duplex, Readable);
-
-var keys = Object.keys(Writable.prototype);
-for (var v = 0; v < keys.length; v++) {
-  var method = keys[v];
-  if (!Duplex.prototype[method])
-    Duplex.prototype[method] = Writable.prototype[method];
+// data事件触发flowing mode
+Readable.prototype.on = function(ev, fn) {
+    ...
+    if (ev === 'data' && false !== this._readableState.flowing) {
+        this.resume();
+      }
+      ...
 }
+
+// resume触发flowing mode
+Readable.prototype.resume = function() {
+    var state = this._readableState;
+    if (!state.flowing) {
+           debug('resume');
+           state.flowing = true;
+    resume(this, state);
+  }
+  return this;
+}
+
+// pipe方法触发flowing模式
+Readable.prototype.resume = function() {
+    if (!state.flowing) {
+        this.resume()
+    }
+}
+```
+结论
+
+两种方式取决于一个flowing字段：true --> flowing mode；false --> paused mode
+
+三种方式最后均是通过resume方法，将state.flowing = true
+
+```
+参考资料：
+https://yjhjstz.gitbooks.io/deep-into-node/chapter8/chapter8-1.html
+http://www.runoob.com/nodejs/nodejs-stream.html
+https://nodejs.org/api/stream.html
 ```
