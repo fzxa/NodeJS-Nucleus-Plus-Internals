@@ -54,6 +54,7 @@ server.listen(8000);
 
 #### 管道流Pipe
 管道提供了一个输出流到输入流的机制, 从获取到数据传入另外一个流
+无论哪一种流，都会使用.pipe()方法来实现输入和输出。
 
 读取input.txt文件流 
 
@@ -77,3 +78,14 @@ console.log("程序执行完毕");
 查看输出文件流output.txt
 
 hello world
+
+如果多文件还可进行链式操作：
+
+代码如下：
+```js
+a.pipe(b).pipe(c).pipe(d)
+//上面代码等价于
+a.pipe(b);
+b.pipe(c);
+c.pipe(d);
+```
