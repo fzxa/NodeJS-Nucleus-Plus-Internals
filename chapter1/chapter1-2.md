@@ -126,6 +126,7 @@ rs.pipe(process.stdout);//输出 abcdefghijklmnopqrstuvwxyz
 
 ### writable流
 writable流 只流进不能流出的流:
+定义一个._write(chunk,enc,next)函数
 ```js
 var Writable = require('stream').Writable;
 var ws = Writable();
