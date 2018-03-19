@@ -121,4 +121,4 @@ rs._read = function () {
 
 rs.pipe(process.stdout);//输出 abcdefghijklmnopqrstuvwxyz
 ```
-####注意：process.stdout之前已经将内容推送进readable流rs中，但是所有的数据依然是可写的
+#### 注意：process.stdout之前已经将内容推送进readable流rs中，但是所有的数据依然是可写的
