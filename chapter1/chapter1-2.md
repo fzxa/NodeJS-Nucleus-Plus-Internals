@@ -38,7 +38,7 @@ server.listen(8000);
 
 这段将data.txt一段一段的发送到用户端
 
-这样减少了很大的服务器压力
+这样减少了很多的服务器压力
 
 ```js
 var http = require('http');
