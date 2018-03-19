@@ -83,9 +83,10 @@ hello world
 
 代码如下：
 ```js
-a.pipe(b).pipe(c).pipe(d)
-//上面代码等价于
 a.pipe(b);
 b.pipe(c);
 c.pipe(d);
+
+//上面代码等价于这样
+a.pipe(b).pipe(c).pipe(d)
 ```
