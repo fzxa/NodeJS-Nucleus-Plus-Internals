@@ -59,7 +59,7 @@ server.listen(8000);
 
 hello world 
 
-```
+```js
 var fs = require("fs");
 
 // 创建一个可读流
