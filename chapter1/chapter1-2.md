@@ -95,3 +95,15 @@ a.pipe(b).pipe(c).pipe(d)
 
 ### readable 可读操作
 Readable流可以产出数据流，你可以将这些数据传送到一个writable，transform， duplex，并调用pipe()方法:
+
+```js
+var Readable = require('stream').Readable;
+
+var rs = new Readable;
+rs.push('beep ');
+rs.push('boop\n');
+rs.push(null);
+
+rs.pipe(process.stdout); //输出： beep boop
+```
+在上面的代码中rs.push(null)的作用是告诉rs输出数据应该结束了。
