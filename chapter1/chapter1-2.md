@@ -119,5 +119,5 @@ rs._read = function () {
     if (c > 'z'.charCodeAt(0)) rs.push(null);
 };
 
-rs.pipe(process.stdout);
+rs.pipe(process.stdout);//输出 abcdefghijklmnopqrstuvwxyz
 ```
