@@ -107,3 +107,17 @@ rs.push(null);
 rs.pipe(process.stdout); //输出： beep boop
 ```
 在上面的代码中rs.push(null)的作用是告诉rs输出数据应该结束了。
+
+
+```js
+var Readable = require('stream').Readable;
+var rs = Readable();
+
+var c = 97;
+rs._read = function () {
+    rs.push(String.fromCharCode(c++));
+    if (c > 'z'.charCodeAt(0)) rs.push(null);
+};
+
+rs.pipe(process.stdout);
+```
