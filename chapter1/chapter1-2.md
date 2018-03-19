@@ -127,6 +127,9 @@ rs.pipe(process.stdout);//输出 abcdefghijklmnopqrstuvwxyz
 ### writable流
 writable流 只流进不能流出的流:
 定义一个._write(chunk,enc,next)函数
+
+在从一个readable流向一个writable流传数据的过程中，数据会自动被转换为Buffer对象
+
 ```js
 var Writable = require('stream').Writable;
 var ws = Writable();
