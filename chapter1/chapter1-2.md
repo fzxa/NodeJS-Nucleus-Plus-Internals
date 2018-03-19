@@ -140,3 +140,5 @@ ws._write = function (chunk, enc, next) {
 
 process.stdin.pipe(ws);
 ```
+
+### duplex 全双工流
