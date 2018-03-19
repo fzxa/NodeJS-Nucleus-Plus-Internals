@@ -74,6 +74,6 @@ readerStream.pipe(writerStream);
 
 console.log("程序执行完毕");
 ```
-查看output.txt内容
+查看输出文件流output.txt
 
 hello world
