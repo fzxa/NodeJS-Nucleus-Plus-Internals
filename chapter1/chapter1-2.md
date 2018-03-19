@@ -126,3 +126,13 @@ rs.pipe(process.stdout);//输出 abcdefghijklmnopqrstuvwxyz
 
 ### writable流
 writable流 只流进不能流出的流:
+```js
+var Writable = require('stream').Writable;
+var ws = Writable();
+ws._write = function (chunk, enc, next) {
+    console.dir(chunk);
+    next();
+};
+
+process.stdin.pipe(ws);
+```
