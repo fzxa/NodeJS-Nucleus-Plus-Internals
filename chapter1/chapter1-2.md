@@ -1,7 +1,7 @@
 ### Node Stream模块分析
 
 
-Stream在平时业务开发时很少用到， 但是很多模块都是机遇stream实现的，引用官方文档的解释：
+Stream在平时业务开发时很少用到， 但是很多模块都是基于stream实现的，引用官方文档的解释：
 
 流（stream）在 Node.js 中是处理流数据的抽象接口（abstract interface）。
 
