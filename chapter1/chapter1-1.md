@@ -3,7 +3,7 @@
 
 http是nodejs中重要的模块之一，有必要了解它的运行原理
 
-回到helloworld ,当node在收到一个http请求，会创建一个http.Server，注册并监听request。
+回到helloWorld ,当node在收到一个http请求，会创建一个http.Server，注册并监听request。
 
 ```js
 var http = require('http');
