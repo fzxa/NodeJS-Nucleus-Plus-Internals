@@ -58,7 +58,7 @@ server.listen(8000);
 
 读取input.txt文件流 
 
-hello world 
+hello World 
 
 ```js
 var fs = require("fs");
@@ -77,7 +77,7 @@ console.log("程序执行完毕");
 ```
 查看输出文件流output.txt
 
-hello world
+hello World
 
 
 
