@@ -1,4 +1,4 @@
-### NodeJS源码分析-1 Hello world
+### NodeJS源码分析-1 Hello World
 
 #### 简要
 Node已经如今发展很快，已经相对稳定和成熟，在某些时候有必要知道其内部运行原理以及运行处理过程。
@@ -52,7 +52,7 @@ Node.js主要分为四大部分，Node Standard Library，Node Bindings，V8，L
 ```
 
 ### Hello World 底层运行过程
-[官方Hello world代码](https://nodejs.org/en/about/)
+[官方Hello World代码](https://nodejs.org/en/about/)
 ```js
 #app.js
 const http = require('http');
@@ -71,7 +71,7 @@ server.listen(port, hostname, () => {
 });
 ```
 
-一个简单的Helloworld涉及到多个模块：
+一个简单的HelloWorld涉及到多个模块：
 - global 
 - module
 - http
